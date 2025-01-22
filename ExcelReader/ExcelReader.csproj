@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+	<PackageId>ExcelReader</PackageId>
+	<Version>1.0.0</Version>
+    <Authors>ISMIAC</Authors>
+	<Description>A library for mapping Excel data to C# models using NPOI. Supports advanced data binding and error handling.</Description>    <PackageTags>excel, npoi, data-mapping, spreadsheet</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+	  
+	
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NPOI" Version="2.7.2" />
+  </ItemGroup>
+
+</Project>
