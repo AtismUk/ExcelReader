@@ -59,6 +59,51 @@ namespace ExcelReader.ExcelReader.Reader
             }
         }
 
+        /// <summary>
+        /// Прочтать Excel через stream
+        /// </summary>
+        /// <param name="stream">стрим</param>
+        /// <returns>Объект для работы с файлом Excel</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="InvalidDataException"></exception>
+        /// <exception cref="FormatException"></exception>
+        public static IWorkbook ReadStream(Stream stream)
+        {
+
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+
+            if (!stream.CanRead)
+                throw new ArgumentException("Поток не доступен для чтения", nameof(stream));
+
+
+            byte[] header = new byte[8];
+            int bytesRead = stream.Read(header, 0, header.Length);
+            stream.Seek(-bytesRead, SeekOrigin.Current);
+
+            if (bytesRead < 8)
+                throw new InvalidDataException("Недостаточно данных для определения формата");
+
+            try
+            {
+                if (header[0] == 0x50 && header[1] == 0x4B && header[2] == 0x03 && header[3] == 0x04)
+                    return new XSSFWorkbook(stream);
+
+                if (header[0] == 0xD0 && header[1] == 0xCF && header[2] == 0x11 && header[3] == 0xE0
+                    && header[4] == 0xA1 && header[5] == 0xB1 && header[6] == 0x1A && header[7] == 0xE1)
+                    return new HSSFWorkbook(stream);
+
+            }
+            catch (Exception ex)
+            {
+                throw new FormatException("Формат не соответсмтвует xlx или xlsx");
+            }
+
+            throw new FormatException("Формат не соответсмтвует xlx или xlsx");
+
+        }
+
 
 
         /// <summary>

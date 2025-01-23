@@ -78,5 +78,43 @@ namespace ExcelReader.ExcelReader.Reader
                 _workBook.Write(fileStream, false);
             }
         }
+
+
+        /// <summary>
+        /// Записать Excel в стрим
+        /// </summary>
+        /// <param name="stream">Стрим</param>
+        /// <param name="leaveOpen">Оставить стрим открытым для записи после завершения метода</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        public void WriteToStream(Stream stream, bool leaveOpen = false)
+        {
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+
+            if (!stream.CanWrite)
+                throw new ArgumentException("Поток недоступен для записи", nameof(stream));
+
+            long originalPosition = stream.CanSeek ? stream.Position : 0;
+
+            try
+            {
+                _workBook.Write(stream, leaveOpen);
+
+                if (stream.CanSeek)
+                    stream.Seek(0, SeekOrigin.Begin);
+
+            }
+            finally
+            {
+                if (stream.CanSeek)
+                    stream.Position = originalPosition;
+
+                if (!leaveOpen)
+                {
+                    stream.Close();
+                }
+            }
+        }
     }
 }
